@@ -4,7 +4,8 @@ const JSDOM = require('jsdom').JSDOM
 let selector = '.property__container .item .clear-children'
 let url = 'https://www.hemnet.se/bostad/villa-4rum-alvsoden-ornskoldsviks-kommun-alvsoden-113-16096759'
 
-fetch(url)
+const exportHouse = (url, filename) => {
+  fetch(url)
   .then(resp => resp.text())
   .then(text => {
     let dom = new JSDOM(text)
@@ -18,7 +19,8 @@ fetch(url)
       printStr += def + '\n'
     })
 
-    exportFile(printStr)
+    if (!filename) { filename = getTitle(dom) }
+    exportFile(printStr, filename)
    })
 
 
@@ -36,9 +38,9 @@ fetch(url)
     return getAttribute(infoPane, 'dd')
   }
 
-  const exportFile = (string) => {
+  const exportFile = (string, filename) => {
     const fs = require('fs')
-    fs.writeFile(__dirname + '/output.txt', string, function(err) {
+    fs.writeFile(__dirname + '/export/' + filename + '.txt', string, function(err) {
         if(err) {
             return console.log(err)
         }
@@ -49,3 +51,21 @@ fetch(url)
   const getTitle = (dom) => {
     return dom.window.document.querySelector('h1').innerHTML
   }
+
+}
+
+const exportHousesFromURL = (url, limit) => {
+  fetch(url)
+  .then(resp => resp.text())
+  .then(text => {
+    let dom = new JSDOM(text)
+    const titles = dom.window.document.querySelectorAll('.listing-card__link.js-listing-card-link ')
+    const titlesArr = Array.from(titles)
+
+    titlesArr.slice(-limit).forEach(title => {
+      exportHouse(title.getAttribute('href'), false)
+    })
+   })
+}
+
+exportHousesFromURL('https://www.hemnet.se/bostader?', 10)
