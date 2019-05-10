@@ -1,9 +1,6 @@
 const fetch = require('node-fetch')
 const JSDOM = require('jsdom').JSDOM
 
-let selector = '.property__container .item .clear-children'
-let url = 'https://www.hemnet.se/bostad/villa-4rum-alvsoden-ornskoldsviks-kommun-alvsoden-113-16096759'
-
 const exportHouse = (url, filename) => {
   fetch(url)
   .then(resp => resp.text())
