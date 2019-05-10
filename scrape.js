@@ -44,7 +44,7 @@ const exportHouse = (url, filename) => {
         if(err) {
             return console.log(err)
         }
-        console.log('The file was saved!')
+        // console.log('The file was saved!')
     }); 
   }
 
@@ -66,6 +66,8 @@ const exportHousesFromURL = (url, limit) => {
       exportHouse(title.getAttribute('href'), false)
     })
    })
+   console.log('Export finished!')
+   console.log(limit + ' files created.')
 }
 
 exportHousesFromURL('https://www.hemnet.se/bostader?', 10)
